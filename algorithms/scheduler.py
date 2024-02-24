@@ -1,13 +1,17 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
 
 tasks_df = pd.DataFrame(columns= ["Query", "Name", "Description", "Priority", "Duration", "Scheduled"])
-availability = {
-    "start_time-end_time": False,
-    "start_time2-end_time2": False,
-    "start_time3-end_time3": False,
-    #...
-}
+now = datetime.now()
+start_of_week = now - timedelta(days=now.weekday())
+availability = {}
+for i in range(7):
+    current_date = start_of_week + timedelta(days=i)
+    for hour in range(24):
+        formatted_date = current_date.strftime("%A, %H:00")
+        availability[formatted_date] = False  # You can associate any value you want here
+
 
 def generate_task(task_query):
     #LLM to take text query to task name and description
@@ -34,6 +38,7 @@ def add_task(task):
 
 def scheduler(tasks):
     have_start_time = tasks[tasks["DateTime"] != np.nan]
+
     #Put into calendar and mark respective times unavailable
     #Have check for time not fittting into slot and have it return a message and NOT UPDATE THE CALENDAR
     
