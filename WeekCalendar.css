@@ -1,0 +1,70 @@
+.week-calendar {
+    display: flex;
+    background-color: #333; /* Dark background */
+  }
+  
+  .time-column, .day-column {
+    border-right: 1px solid #555; /* Darker border for separation */
+  }
+  
+  .time-column {
+    flex: 0 0 80px; /* Increase the flex-basis from the original value to 80px */
+    display: flex;
+    flex-direction: column;
+    background-color: #222;
+  }
+  
+  
+  .hour, .day-label {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #555; /* Darker border */
+    color: #ddd; /* Lighter text for visibility */
+  }
+  
+  .day-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .hour-marker {
+    border-bottom: 1px solid #444; /* Subtle border for hour markers */
+    flex-grow: 1;
+    cursor: pointer;
+  }
+  
+  .clicked {
+    background-color: #90ee90; /* This can stay the same for contrast, or choose a darker green */
+  }
+  
+  /* Styling for the day labels at the top of each column */
+  .day-label {
+    border-bottom: 1px solid #555;
+    background-color: #2a2a2a; /* Slightly different background for header */
+    font-weight: bold;
+  }
+  
+  /* Extra styling for alignment and presentation */
+  .hour-label {
+    height: 30px;
+  }
+  
+  .confirm-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #444; /* Dark button background */
+    color: #fff; /* Light text */
+    border: none;
+    border-radius: 4px; /* Optional: adds rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .confirm-button:hover {
+    background-color: #555; /* Slightly lighter on hover */
+  }
+  
