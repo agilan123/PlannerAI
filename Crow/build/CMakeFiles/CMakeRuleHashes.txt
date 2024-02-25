@@ -1,0 +1,8 @@
+# Hashes of file build rules.
+e34cfddcb896a39b561631a518e1e694 CMakeFiles/uninstall
+62cb498c6c8701c541750bcef9046034 examples/CMakeFiles/example_chat_copy
+62cb498c6c8701c541750bcef9046034 examples/CMakeFiles/example_ws_copy
+70a32ec6595af526bf8184dc5004aa20 examples/example_chat.html
+585e4a1872f8564cc5275e84dacad8cc examples/ws.html
+4f687cb0259416e023de54c2c1a13221 tests/template/CMakeFiles/template_test_copy
+8db54f821885b12cd055e5a2c10832d4 tests/template/test.py
