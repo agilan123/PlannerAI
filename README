@@ -1,17 +1,24 @@
 # Project A.V.A (Agenda Visualization Application)
-
 ## Description
-Project A.V.A. is a web-based scheduling tool that utilizes ML to streamline the process of scheduling tasks throughout the week. By assigning priority and durations based on the short task input, we significantly reduce the time required to plan out your 
+Project A.V.A is a sophisticated web-based scheduling tool that leverages Machine Learning (ML) technology to optimize weekly task scheduling efficiently. By analyzing brief task inputs, it assigns appropriate priorities and durations, significantly reducing the time users spend planning their weeks.
 
-## Instructions
-To get started, visit the Project AVA website.
-On the home screen, give a simple description of each task and add them in the list of tasks. If you would like to schedule the task for a specific time, make sure to mention that in your description. To remove any tasks click the 'x' next to the task in the task list. Once you have listed all your tasks, hit the submit button to submit them.
-You will then be taken to the staging page where, for each task, you can view and edit the priorities and durations set by our model. At the current stage of our project this is the final page. The tasks will be sorted by priority in this view, so it can be used as a smart task list at this point.
+## Getting Started
+### How to Use Project A.V.A
+1. Visit the Project A.V.A Website: Navigate to our homepage to begin the process.
+2. Enter Task Descriptions: Provide a simple description for each task you wish to schedule and add it to your task list. If a task needs to be scheduled at a specific time, include that detail in your description. To delete a task, simply click the 'x' icon adjacent to the task in the list.
+3. Submit Your Tasks: After listing all tasks, click the submit button.
+4. Adjust Priorities and Durations: You'll be directed to a staging page, where you can view and modify the priorities and durations suggested by our ML model. At this stage, tasks are sorted by priority, serving as an intelligent task list.
 
-However, we intend to extend our functionality much further in future versions. After the staging page, you would fill out your availability for the week in a drag-to-select calendar (kind of like a when-2-meet). Using this information the application will generate a final calendar view of your tasks for the week in accordance with your availability.
-The vision of this project is to have the ability for the user to login and preserve their generated schedules to come back to at any time. To this end we also intend for the user to go back and forth between phases of the schedule making process to add and edit the tasks and queries to make small tweaks and optimize their schedule if they wish to do so.
+### Future Enhancements
+In subsequent versions, users will:
+ - Specify their weekly availability via a drag-to-select calendar feature, similar to "When2meet".
+ - Receive a finalized calendar view of tasks scheduled around their availability.
+ - Have the option to log in and save their schedules for future reference and modification.
+ - Enjoy the flexibility to revisit and adjust any phase of the schedule planning process for optimal time management.
 
-Methods:
-Our ML model uses tensorflow tokenizer taking in the task descriptions as input and outputting numerical priority order from 0-3 and task durations from 1-6 hrs. The model is trained on data we generated. We began with some task descriptions of our own and refined and expanded them using Chat-GPT to quickly bootstrap our training dataset. With this method we generated 7000 tasks for training and our model performs well with 88.2% accuracy.
-Once we have assigned priority and duration our sorting algorithm is deterministic and relatively simple. Task for which the user has mentioned a specific time are scheduled first. Then the remaining tasks are tasks are inserted into available space in the calendar in chronological order by priority. If the entirety of a task cannot be fit within the marked available times, it overflows to the next available time slot.
-    
+## Methods
+### Machine Learning Model
+Our ML model employs a TensorFlow tokenizer to process task descriptions, outputting a numerical priority (ranging from 0 to 3) and task durations (from 1 to 6 hours). The model, trained on a dataset of 7,000 tasks developed using initial inputs and Chat-GPT for rapid expansion, boasts an accuracy of 88.2%.
+
+### Sorting Algorithm
+Post-priority and duration assignment, our algorithm schedules tasks with specified times first. Subsequent tasks are then chronologically ordered by priority and slotted into the available time spaces. Tasks that cannot be entirely accommodated within designated times spill over to the next available slot, ensuring a comprehensive and efficient schedule.
