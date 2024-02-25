@@ -1,1 +1,17 @@
-Start of project
+Project A.V.A (Agenda Visualization Application)
+
+Project A.V.A. is a web-based scheduling tool that utilizes ML to streamline the process of scheduling tasks throughout the week. By assigning priority and durations based on the short task input, we significantly reduce the time required to plan out your 
+
+Instructions:
+    To get started, visit the Project AVA website. Start by filling out your availability for the week in the drag-to-select calendar. 
+    
+    Then in the home screen, give a simple description of each task and queue them in the list of tasks. If you would like to schedule the event for a specific time, make sure to mention that in your description. To remove any tasks click the corresponding 'x' for that task in the task list. Once you have listed all your tasks, hit the submit button to submit them.
+
+    You will then be taken to the staging page where, for each, task you can view and edit the priorities and durations set by our model. Once you are satisfied with all your tasks, hit submit again to generate your calendar.
+
+    On the final calendar page, you can view your final calendar. If you are not satisfied, go back to the previous page, modify the tasks, and submit again. When you are done, using the export button, export it as an .ical file to import to your favorite calendar app.
+
+
+Methods:
+    Our ML model ____
+    
