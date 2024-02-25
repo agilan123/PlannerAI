@@ -5,11 +5,13 @@ Project A.V.A. is a web-based scheduling tool that utilizes ML to streamline the
 
 ## Instructions
 To get started, visit the Project AVA website.
-On the home screen, give a simple description of each task and queue them in the list of tasks. If you would like to schedule the event for a specific time, make sure to mention that in your description. To remove any tasks click the 'x' next to the task in the task list. Once you have listed all your tasks, hit the submit button to submit them.
-You will then be taken to the staging page where, for each, task you can view and edit the priorities and durations set by our model. Once you are satisfied with all your tasks, hit submit again to move to the next step.
-On the third page you will fill out your availability for the week in the drag-to-select calendar. Then hit submit to move to the final page.
-On the calendar page, you can view your final calendar. If you are not satisfied, go back to the previous page, modify the tasks, and submit again. When you are done, using the export button, export it as an .ical file to import to your favorite calendar app.
+On the home screen, give a simple description of each task and add them in the list of tasks. If you would like to schedule the task for a specific time, make sure to mention that in your description. To remove any tasks click the 'x' next to the task in the task list. Once you have listed all your tasks, hit the submit button to submit them.
+You will then be taken to the staging page where, for each task, you can view and edit the priorities and durations set by our model. At the current stage of our project this is the final page. The tasks will be sorted by priority in this view, so it can be used as a smart task list at this point.
+
+However, we intend to extend our functionality much further in future versions. After the staging page, you would fill out your availability for the week in a drag-to-select calendar (kind of like a when-2-meet). Using this information the application will generate a final calendar view of your tasks for the week in accordance with your availability.
+The vision of this project is to have the ability for the user to login and preserve their generated schedules to come back to at any time. To this end we also intend for the user to go back and forth between phases of the schedule making process to add and edit the tasks and queries to make small tweaks and optimize their schedule if they wish to do so.
 
 Methods:
-    Our ML model ____
+Our ML model uses tensorflow tokenizer taking in the task descriptions as input and outputting numerical priority order from 0-3 and task durations from 1-6 hrs. The model is trained on data we generated. We began with some task descriptions of our own and refined and expanded them using Chat-GPT to quickly bootstrap our training dataset. With this method we generated 7000 tasks for training and our model performs well with 88.2% accuracy.
+Once we have assigned priority and duration our sorting algorithm is deterministic and relatively simple. Task for which the user has mentioned a specific time are scheduled first. Then the remaining tasks are tasks are inserted into available space in the calendar in chronological order by priority. If the entirety of a task cannot be fit within the marked available times, it overflows to the next available time slot.
     
