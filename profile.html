@@ -1,139 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile</title>
-<style>
-body {
-  height: 100vh;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #3B3838;
-}
+    <meta charset="UTF-8">
+    <title>Week Calendar</title>
+    <style>
+        /* WeekCalendar.css content */
+        .week-calendar {
+            display: flex;
+            background-color: #333; /* Dark background */
+        }
 
-.container {
-  position: relative;
-  height: 100%;
-  padding: 20px;
-}
+        .time-column, .day-column {
+            border-right: 1px solid #555; /* Darker border for separation */
+        }
 
-.header {
-  text-align: center;
-  color: #9B9595;
-  padding: 20px;
-}
+        .time-column {
+            flex: 0 0 80px; /* Increase the flex-basis from the original value to 80px */
+            display: flex;
+            flex-direction: column;
+            background-color: #222;
+        }
 
-.header h1 {
-  font-size: 48px;
-}
+        .hour, .day-label {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #555; /* Darker border */
+            color: #ddd; /* Lighter text for visibility */
+        }
 
-.menu-icon {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  cursor: pointer;
-  z-index: 1;
-}
+        .day-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-.menu-icon .bar {
-  display: block;
-  width: 35px;
-  height: 5px;
-  background-color: #1B1010;
-  margin: 6px 0;
-}
+        .hour-marker {
+            border-bottom: 1px solid #444; /* Subtle border for hour markers */
+            flex-grow: 1;
+            cursor: pointer;
+        }
 
-.menu {
-  display: none;
-  background-color: #3B3838;
-  position: absolute;
-  top: 80px;
-  left: 20px;
-  border: 1px solid #9B9595;
-  border-radius: 5px;
-}
+        .clicked {
+            background-color: #90ee90; /* Light green for selected times */
+        }
 
-.menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        .day-label {
+            border-bottom: 1px solid #555;
+            background-color: #2a2a2a; /* Slightly different background for header */
+            font-weight: bold;
+        }
 
-.menu ul li a {
-  text-decoration: none;
-  color: #9B9595;
-  padding: 10px 15px;
-  display: block;
-}
+        .confirm-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #444; /* Dark button background */
+            color: #fff; /* Light text */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
 
-.menu ul li a:hover {
-  background-color: #1B1010;
-}
+        .confirm-button:hover {
+            background-color: #555; /* Slightly lighter on hover */
+        }
+    </style>
 
-.avatar {
-  position: absolute;
-  top: 50px; /* Adjusted */
-  left: 50px; /* Adjusted */
-  width: 150px;
-  height: 150px;
-  background-color: #9B9595;
-  border-radius: 50%;
-}
-
-.profile-info {
-  position: absolute;
-  top: 80px; /* Adjusted */
-  left: 250px; /* Adjusted */
-  color: #9B9595;
-}
-
-
-.profile-info h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.profile-info p {
-  font-size: 18px;
-}
-
-</style>
 </head>
 <body>
-<div class="container">
-    <div class="menu-icon" onclick="toggleMenu()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
-    <div class="menu">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Calendar</a></li>
-            <li><a href="ava.html">Back to Ava</a></li>
-        </ul>
-    </div>
-    <div class="header">
-        <h1>Profile</h1>
-    </div>
-    <div class="avatar"></div>
-    <div class="profile-info">
-        <h2>John Doe</h2>
-        <p>johndoe@gmail.com</p>
-    </div>
-</div>
-<script>
-function toggleMenu() {
-  var menu = document.querySelector('.menu');
-  if (menu.style.display === 'block') {
-    menu.style.display = 'none';
-  } else {
-    menu.style.display = 'block';
-  }
-}
-</script>
+    <div id="root"></div>
+
+    <!-- React and ReactDOM from CDN for simplicity -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX processing in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        // Your React component code adapted for direct embedding
+        const hours = [...Array(12).keys()].map(hour => `${hour + 1}:00 AM`).concat([...Array(12).keys()].map(hour => `${hour + 1}:00 PM`));
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function WeekCalendar() {
+            const [clicked, setClicked] = React.useState({});
+            const [isDragging, setIsDragging] = React.useState(false);
+
+            const generateKey = (dayIndex, hourIndex) => `${dayIndex}-${hourIndex}`;
+
+            const handleMouseDown = (dayIndex, hourIndex) => {
+                setIsDragging(true);
+                toggleSelection(dayIndex, hourIndex);
+            };
+
+            const handleMouseEnter = (dayIndex, hourIndex) => {
+                if (!isDragging) return;
+                toggleSelection(dayIndex, hourIndex);
+            };
+
+            const handleMouseUp = () => {
+                setIsDragging(false);
+            };
+
+            const toggleSelection = (dayIndex, hourIndex) => {
+                const key = generateKey(dayIndex, hourIndex);
+                const updatedClicked = { ...clicked, [key]: !clicked[key] };
+                setClicked(updatedClicked);
+            };
+
+            const generateSelectionArray = () => {
+                const selectionArray = days.map((_, dayIndex) => 
+                    hours.map((_, hourIndex) => clicked[generateKey(dayIndex, hourIndex)] ? 1 : 0)
+                );
+                return selectionArray;
+            };
+
+            const handleConfirm = () => {
+                const selectionArray = generateSelectionArray();
+                const json = JSON.stringify(selectionArray);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'selection.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            return (
+                <div className="week-calendar" onMouseLeave={handleMouseUp}>
+                    <div className="time-column">
+                        <div className="hour-label"></div>
+                        {hours.map(hour => (
+                            <div key={hour} className="hour">{hour}</div>
+                        ))}
+                    </div>
+                    {days.map((day, dayIndex) => (
+                        <div key={day} className="day-column">
+                            <div className="day-label">{day}</div>
+                            {hours.map((hour, hourIndex) => (
+                                <div 
+                                    key={hour} 
+                                    className={`hour-marker ${clicked[generateKey(dayIndex, hourIndex)] ? 'clicked' : ''}`} 
+                                    onMouseDown={() => handleMouseDown(dayIndex, hourIndex)}
+                                    onMouseEnter={() => handleMouseEnter(dayIndex, hourIndex)}
+                                    onMouseUp={handleMouseUp}
+                                ></div>
+                            ))}
+                        </div>
+                    ))}
+                    <button onClick={handleConfirm} className="confirm-button">Confirm</button>
+                </div>
+            );
+        }
+
+        function App() {
+            return (
+                <div className="App">
+                    <WeekCalendar />
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
 </body>
 </html>
