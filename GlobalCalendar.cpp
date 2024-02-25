@@ -1,11 +1,12 @@
 #include "GlobalCalendar.h"
 #include <cctype> 
-GlobalCalendar::GlobalCalendar(const vector<vector<int>>& calendar) {
+GlobalCalendar::GlobalCalendar(const vector<vector<int>>& calendar, map<int, vector<pair<string, int>>> events) {
     for(unsigned int i = 0; i < calendar.size(); i++) {
         for(unsigned int j = 0; j < calendar[0].size(); j++) {
             Calendar[i][j] = calendar[i][j];
         }
     }
+    Events = events;
 }
 
 
@@ -27,7 +28,7 @@ void GlobalCalendar::AddEvent(const string& title, const string& query, int prio
         day = 5;
     }
      else if(title.find("saturday") != std::string::npos || title.find("Saturday") != std::string::npos) {
-        day = 5;
+        day = 6;
     }
     
     for (unsigned int i = 0; i < query.length(); i++ ) {
@@ -45,7 +46,7 @@ void GlobalCalendar::AddEvent(const string& title, const string& query, int prio
             }
         }
     }
-    Events[priority].push_back(std::make_pair(title, intensity));
+    Events[priority].push_back(make_pair(title, intensity));
 }
 
 // RemoveEvent method
@@ -60,7 +61,7 @@ void GlobalCalendar::RemoveEvent(string title, int priority, int which_one) {
 }
 
 // ReturnColorings method
-std::pair<std::vector<std::vector<int>>, std::vector<std::pair<std::string, std::pair<int, int>>>> GlobalCalendar::ReturnColorings() {
+pair<vector<vector<int>>, vector<pair<string, vector<int>>>> GlobalCalendar::ReturnColorings() {
     int current = 0;
     for(unsigned int i = 0; i < 7; i++) {
         for (unsigned int j = 0; j < 24; j++) {
@@ -72,7 +73,7 @@ std::pair<std::vector<std::vector<int>>, std::vector<std::pair<std::string, std:
                     Calendar[i][j] = current;
                     event.second[0].second -= 1;
                     if(event.second[0].second == 0) {
-                        returner.push_back(std::make_pair(event.second[0].first, std::make_pair(0, 0)));
+                        returner.push_back(std::make_pair(event.second[0].first, vector<int>(3, 0)));
                         current++;
                         event.second.erase(event.second.begin());
                     }
@@ -94,9 +95,27 @@ void GlobalCalendar::AddEventToCalendarFinal(const string& title, int time, int 
     }
     if(is_there) {
         for(unsigned int i = time; i < (time + intensity); i++) {
-            Calendar[day][i] == -1;
+            Calendar[day][i] = -1;
         }
-        returner.push_back(std::make_pair(title, std::make_pair(day, time)));
+        returner.push_back(std::make_pair(title, vector<int>() {day, time, priority}));
     }
 
+}
+
+string execPythonScript(const string& jsonInput) {
+    string command = "python your_script.py '" + jsonInput + "'";
+    char buffer[128];
+    string result = "";
+    FILE* pipe = popen(command.c_str(), "r");
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    try {
+        while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
+            result += buffer;
+        }
+    } catch (...) {
+        pclose(pipe);
+        throw;
+    }
+    pclose(pipe);
+    return result;
 }
