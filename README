@@ -1,5 +1,4 @@
-'''markdown
-'''# Project A.V.A (Agenda Visualization Application)
+# Project A.V.A (Agenda Visualization Application)
 
 ## Description
 Project A.V.A. is a web-based scheduling tool that utilizes ML to streamline the process of scheduling tasks throughout the week. By assigning priority and durations based on the short task input, we significantly reduce the time required to plan out your 
