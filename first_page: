@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVA - Your Calendar Assistant</title>
+<style>
+  body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: #333;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+    }
+    .banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    padding: 10px 20px;
+    color: rgb(202, 201, 201);
+    font-size: 24px; /* Adjusted for better fit */
+    font-weight: bold;
+  }
+  .banner span {
+    flex: 1;
+    text-align: center;
+    font-size: 40px; /* Main title size */
+  }
+  .banner .date, .banner .project-info {
+    font-size: 18px;
+  }
+  .content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+  }
+  .description {
+    width: 50%;
+    font-size: 18px;
+    padding-right: 20px;
+    text-align: center;
+
+  }
+  .query-output-container {
+  width: 50%;
+  padding: 10px;
+  border: 2px solid #aaa; /* Adds a border around the output container */
+  border-radius: 15px; /* Adjusts the rounding of the corners */
+  margin-top: 20px; /* Adds some space above the container */
+  margin-bottom: 20px; /* Adds some space above the container */
+  height: calc(100vh - 200px); /* Adjust based on your layout */
+  overflow-y: auto; /* Ensures scrollability for overflow content */
+}
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blinkCursor {
+    from { border-right-color: rgba(255,255,255,.75); }
+    to { border-right-color: transparent; }
+}
+
+#typedText {
+    font-family: monospace;
+    border-right: 3px solid rgba(255,255,255,.75); /* Cursor style */
+    padding: 20px; /* Add some padding */
+    display: inline-block; /* Align text block to the center */
+    animation: blinkCursor .75s step-end infinite;
+    text-align: center; /* Align the typed text to left */
+    line-height: 1.5;
+}
+
+/* Center the container of the typed text */
+.content {
+    display: flex;
+    justify-content: bottom; /* This will center the #typedText div */
+    align-items: center;
+    height: 100%; /* Make sure the container takes full height */
+}
+
+  .query-box {
+    background-color: #555;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+    padding: 10px;
+    display: block;
+    width: 100%;
+  }
+  .query-text {
+    animation: fadeIn 0.2s ease-out; 
+    word-break: break-all;
+    word-break: break-all;
+  }
+  .delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 10px;
+    color: #aaa;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  .fixed-input-container {
+    padding: 10px 20px;
+    background-color: #333;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .input-field {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 0; /* Align with the send button */
+    margin-right: 10px; /* Spacing between input field and button */
+    flex-grow: 1; /* Allow input to fill space */
+  }
+  .send-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #666;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .delete-btn {
+    position: absolute;
+    top: 10px; 
+    right: 30px; 
+    width: 20px; 
+    height: 20px; 
+    line-height: 20px; 
+    text-align: center;
+    padding: 0;
+    color: #333; 
+    background-color: white; 
+    border-radius: 50%; 
+    cursor: pointer;
+    border: none;
+}
+  .send-btn:hover {
+    background-color: #ffffff;
+  }
+  #queryOutput {
+    height: calc(100vh - 140px); /* Adjust height based on banner and input container */
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+    <div class="banner">
+        <div class="project-info">HACKILLINOIS: A Calendar Assistant</div>
+        <span>A V A</span>
+        <div class="date" id="currentDateTime"></div>
+      </div>
+<div class="content">
+  <div class="description" id = "typedText">
+    Hi! Welcome to Ava. Please provide a one sentence summary of the event you'd like to schedule, followed by a colon, followed by the title of the event. We'll make your calendar for you!
+  </div>
+  <div class="query-output-container">
+    <div id="queryOutput"></div>
+  </div>
+</div>
+<div class="fixed-input-container">
+  <input type="text" id="queryInput" class="input-field" placeholder="Enter task or set a goal...">
+  <button id="sendBtn" class="send-btn">Add</button>
+  <button id="submitBtn" class="send-btn" style="margin-left: 10px;">Submit</button>
+
+</div>
+
+<script>
+     function updateDateTime() {
+    const now = new Date();
+    const formattedDateTime = now.toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    }) + '  |  ' + (now.toLocaleTimeString('en-US'));
+    document.getElementById('currentDateTime').textContent = formattedDateTime;
+  }
+  function typeWriter(text, i, fnCallback) {
+    if (i < (text.length)) {
+        document.querySelector("#typedText").innerHTML = text.substring(0, i+1) +'<span aria-hidden="true"></span>';
+
+        // Wait before adding next character
+        setTimeout(function() {
+            typeWriter(text, i + 1, fnCallback)
+        }, 40);
+    }
+    // Text finished, call callback if there is a callback function
+    else if (typeof fnCallback == 'function') {
+        // Add a slight delay before calling the callback
+        setTimeout(fnCallback, 700);
+    }
+}
+
+// Start the typing effect on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function(event) {
+    var text = "Hi! Welcome to Ava. Please use the 'Add' button to provide a one sentence summary of the event you'd like to schedule, followed by a colon, followed by the title of the event. We'll make your calendar for you! Events you add should appear in the container to your right -- feel free to delete items you don't need. When you are done listing items, please click the 'submit' button below.";
+    
+    // After the typing, remove the cursor
+    function removeCursor() {
+        document.querySelector("#typedText").style.borderRight = 'none';
+    }
+    
+    typeWriter(text, 0, removeCursor);
+});
+  // Update date and time initially and set interval to update every second
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+  document.getElementById('sendBtn').addEventListener('click', function() {
+    var input = document.getElementById('queryInput');
+    var output = document.getElementById('queryOutput');
+    
+    if (input.value.trim() === '') {
+      return; // Avoid adding empty queries
+    }
+    
+    var queryDiv = document.createElement('div');
+    queryDiv.className = 'query-box';
+    
+    var queryText = document.createElement('span');
+    queryText.textContent = input.value;
+    queryText.className = 'query-text';
+    queryDiv.appendChild(queryText);
+    
+    var deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'X';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.onclick = function() {
+      output.removeChild(queryDiv);
+    };
+    queryDiv.appendChild(deleteBtn);
+    
+    output.appendChild(queryDiv);
+    input.value = '';
+    output.scrollTop = output.scrollHeight; // Auto-scroll to the bottom
+  });
+</script>
+</body>
+</html>
